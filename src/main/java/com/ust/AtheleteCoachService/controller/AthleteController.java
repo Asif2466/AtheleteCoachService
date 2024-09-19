@@ -17,17 +17,17 @@ public class AthleteController {
     private AthleteService athleteService;
 
     @PostMapping("/create")
-    public ResponseEntity<AthleteDTO> createAthlete(AthleteDTO dto){
+    public ResponseEntity<AthleteDTO> createAthlete(@RequestBody AthleteDTO dto){
         return new ResponseEntity<>(athleteService.createAthlete(dto), HttpStatus.CREATED);
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<AthleteDTO> editAthlete(AthleteDTO dto){
+    public ResponseEntity<AthleteDTO> editAthlete(@RequestBody AthleteDTO dto){
         return ResponseEntity.ok(athleteService.editAthlete(dto));
     }
 
     @PostMapping("/request-assistance/{athlete_id}")
-    public ResponseEntity<AssistanceRequestDTO> requestAssistance(AssistanceRequestDTO dto, @PathVariable int athlete_id){
+    public ResponseEntity<AssistanceRequestDTO> requestAssistance(@RequestBody AssistanceRequestDTO dto, @PathVariable int athlete_id){
         return new ResponseEntity<>(athleteService.requestAssistance(dto ,athlete_id),HttpStatus.CREATED);
     }
 

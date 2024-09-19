@@ -4,6 +4,7 @@ public record AssistanceRequestDTO(
     int coach_id,
     String remarks,
     String merits,
-    String goal
+    String goal,
+    int athlete_id
 ) {
 }

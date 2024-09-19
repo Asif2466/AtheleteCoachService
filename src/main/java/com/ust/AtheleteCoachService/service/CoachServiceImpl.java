@@ -106,7 +106,8 @@ public class CoachServiceImpl implements CoachService{
         return requests.stream().map(req -> new AssistanceRequestDTO(req.getCoach().getCoachId(),
                                                             req.getRemark(),
                                                             req.getMerits(),
-                                                            req.getGoal()
+                                                            req.getGoal(),
+                                                            req.getAthlete().getAthleteId()
                 )).toList();
     }
 

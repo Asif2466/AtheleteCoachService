@@ -1,8 +1,16 @@
 package com.ust.AtheleteCoachService.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -10,33 +18,20 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "coaches")
 public class Coach {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Using IDENTITY strategy for auto-increment
-    @Column(name = "coach_id") // Ensuring the column name matches the database
+    @GeneratedValue
     private int coachId;
-
-    @Column(name = "first_name") // Matching column names
     private String firstName;
-
-    @Column(name = "last_name") // Matching column names
-    private String lastName;
-
-    @Column(name = "dob") // Matching column names
+    private String LastName;
     private LocalDate DOB;
-
-    @Column(name = "email") // Matching column names
     private String email;
-
-    @Column(name = "gender") // Matching column names
     private String gender;
 
-    //@OneToMany(mappedBy = "coach", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany
     private List<Athlete> athletes;
 
-   // @OneToMany(cascade = CascadeType.ALL)
-  //  @JoinColumn(name = "coach_id") // Assuming this is the foreign key for achievements
+    @OneToMany
     private List<Achievements> achievements;
 }

@@ -22,4 +22,7 @@ public class Achievements {
     private String score;
     private String performance;
 
+    @ManyToOne
+    private Coach coach;
+
 }

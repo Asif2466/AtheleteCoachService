@@ -13,18 +13,18 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/c1/coaches")
+@RequestMapping("api/v1/coaches")
 public class CoachController {
 
     private CoachService coachService;
 
     @PostMapping("/create")
-    public ResponseEntity<CoachDTO> createCoach(CoachDTO dto){
+    public ResponseEntity<CoachDTO> createCoach(@RequestBody CoachDTO dto){
         return new ResponseEntity<>(coachService.createCoach(dto), HttpStatus.CREATED);
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<CoachDTO> editCoach(CoachDTO dto){
+    public ResponseEntity<CoachDTO> editCoach(@RequestBody CoachDTO dto){
         return ResponseEntity.ok(coachService.editCoach(dto));
     }
 
@@ -53,7 +53,7 @@ public class CoachController {
         return ResponseEntity.ok(coachService.approveRequest(req_id));
     }
 
-    @PostMapping("request/decline/req_id")
+    @PostMapping("/request/decline/req_id")
     public ResponseEntity<String> declineRequest(@PathVariable Long req_id){
         return ResponseEntity.ok(coachService.declineRequest(req_id));
     }

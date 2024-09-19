@@ -17,6 +17,8 @@ public class AssistanceRequest {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "Req_seq")
     @SequenceGenerator(name = "Req_seq",initialValue = 300)
     private long Req_id;
+
+    @OneToOne
     private Athlete athlete;
     private String Merits;
     private String Goal;

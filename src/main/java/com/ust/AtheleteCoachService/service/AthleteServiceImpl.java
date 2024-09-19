@@ -4,6 +4,7 @@ import com.ust.AtheleteCoachService.convertor.Convertor;
 import com.ust.AtheleteCoachService.dto.AssistanceRequestDTO;
 import com.ust.AtheleteCoachService.dto.AthleteDTO;
 import com.ust.AtheleteCoachService.exception.AthleteNotFoundException;
+import com.ust.AtheleteCoachService.exception.CoachNotFoundException;
 import com.ust.AtheleteCoachService.exception.DuplicateAthleteException;
 import com.ust.AtheleteCoachService.exception.DuplicateRequestException;
 import com.ust.AtheleteCoachService.model.AssistanceRequest;
@@ -80,14 +81,17 @@ public class AthleteServiceImpl implements AthleteService{
         Optional<Athlete> athlete = athleteRepository.findById(Athlete_id   );
         if(athlete.isPresent()){
             Optional<Coach> coach = coachRepository.findById(dto.coach_id());
-            if(coach.isPresent()){
-                boolean existingRequest = assistanceRequestRepository.existsByCoachAndAthlete(coach.get(),athlete.get());
-                if(existingRequest){
+            if(coach.isPresent()) {
+                boolean existingRequest = assistanceRequestRepository.existsByCoachAndAthlete(coach.get(), athlete.get());
+                if (existingRequest) {
                     throw new DuplicateRequestException("Request has been already sent...");
                 }
-                AssistanceRequest assistanceRequest = Convertor.toAssistanceRequest(dto,athlete.get(),coach.get());
+                AssistanceRequest assistanceRequest = Convertor.toAssistanceRequest(dto, athlete.get(), coach.get());
                 assistanceRequestRepository.save(assistanceRequest);
                 return dto;
+            }
+            else{
+                throw new CoachNotFoundException("Coach not found");
             }
         }
         return null;
