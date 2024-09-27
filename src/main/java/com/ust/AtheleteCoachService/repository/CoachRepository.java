@@ -11,6 +11,8 @@ public interface CoachRepository extends JpaRepository<Coach, Integer> {
 
     Optional<Coach> findByEmail(String email);
 
+    Optional<Coach> findByCoachId(String id);
+
     List<Coach> findAllByFirstNameContainingIgnoreCase(String name);
 
 }

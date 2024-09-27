@@ -3,13 +3,19 @@ package com.ust.AtheleteCoachService.service;
 import com.ust.AtheleteCoachService.dto.AssistanceRequestDTO;
 import com.ust.AtheleteCoachService.dto.AthleteDTO;
 
+import java.util.List;
+
 public interface AthleteService {
 
     AthleteDTO createAthlete(AthleteDTO dto);
 
-    AthleteDTO editAthlete(AthleteDTO dto);
+    AthleteDTO editAthlete(AthleteDTO dto, String id);
 
-    AssistanceRequestDTO requestAssistance(AssistanceRequestDTO dto, int athlete_id);
+    AthleteDTO findAthlete(String id);
+
+    List<AthleteDTO> findAllAthletes();
+
+    AssistanceRequestDTO requestAssistance(AssistanceRequestDTO dto, String athlete_id);
 
 }
 /*

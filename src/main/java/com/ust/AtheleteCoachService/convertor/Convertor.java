@@ -17,7 +17,7 @@ public class Convertor {
             return null;
         }
         else{
-            return new Athlete(0, dto.firstName(),
+            return new Athlete(null, dto.firstName(),
                     dto.lastName(),
                     dto.DOB(),
                     dto.email(),
@@ -34,7 +34,7 @@ public class Convertor {
             return null;
         }
         else{
-            return new Coach(0,
+            return new Coach(null,
                     dto.firstName(),
                     dto.lastName(),
                     dto.DOB(),
@@ -51,7 +51,7 @@ public class Convertor {
             return null;
         }
         else{
-            return new AssistanceRequest(0,
+            return new AssistanceRequest(null,
                     athlete,
                     dto.merits(),
                     dto.goal(),

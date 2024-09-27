@@ -7,6 +7,7 @@ import com.ust.AtheleteCoachService.model.RequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AssistanceRequestRepository extends JpaRepository<AssistanceRequest, Long> {
 
@@ -14,6 +15,6 @@ public interface AssistanceRequestRepository extends JpaRepository<AssistanceReq
 
     List<AssistanceRequest> findAllByCoachAndStatus(Coach coach, RequestStatus status);
 
-
+    Optional<AssistanceRequest> findByReqid(String id);
 
 }

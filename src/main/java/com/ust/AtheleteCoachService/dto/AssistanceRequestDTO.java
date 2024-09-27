@@ -1,10 +1,14 @@
 package com.ust.AtheleteCoachService.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record AssistanceRequestDTO(
-    int coach_id,
+        String req_id,
+    String coach_id,
     String remarks,
     String merits,
     String goal,
-    int athlete_id
+    String athlete_id
 ) {
 }

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -34,10 +35,23 @@ public class CoachServiceImpl implements CoachService{
                 .ifPresent(
                         a -> { throw new DuplicateCoachException("Coach already exists");}
                 );
-        Coach coach = coachRepository.save(Convertor.toCoach(dto));
-        return dto;
+        Coach coach = Convertor.toCoach(dto);
+        coach.setCoachId("COACH" + String.format("%05d", generateSequenceNumber()));
+        coachRepository.save(coach);
+        return new CoachDTO(
+                coach.getCoachId(),
+                coach.getFirstName(),
+                coach.getLastName(),
+                coach.getDOB(),
+                coach.getEmail(),
+                coach.getGender()
+        );
     }
-
+    private int generateSequenceNumber() {
+        // You need to implement actual logic here (query DB for max ID or use a sequence generator)
+        // Here, we'll just return a random number for illustration purposes
+        return (int) (Math.random() * 100000); // Replace with real sequence logic
+    }
     @Override
     public CoachDTO editCoach(CoachDTO dto) {
         coachRepository.findByEmail(dto.email())
@@ -70,40 +84,59 @@ public class CoachServiceImpl implements CoachService{
     @Override
     public List<CoachDTO> findAllCoaches() {
         List<Coach> coaches = coachRepository.findAll();
-        return coaches.stream().map(coach -> new CoachDTO(coach.getFirstName(),
+        return coaches.stream().map(coach -> new CoachDTO(coach.getCoachId(), coach.getFirstName(),
                 coach.getLastName(), coach.getDOB(), coach.getEmail(), coach.getGender()
                 )).toList();
     }
 
     @Override
+    public CoachDTO findCoach(String id) {
+        Optional<Coach> coach = coachRepository.findByCoachId(id);
+        return new CoachDTO(
+          coach.get().getCoachId(),
+          coach.get().getFirstName(),
+          coach.get().getLastName(),
+          coach.get().getDOB(),
+          coach.get().getEmail(),
+          coach.get().getGender()
+        );
+    }
+
+    @Override
     public List<CoachDTO> searchByName(String name) {
         List<Coach> coaches = coachRepository.findAllByFirstNameContainingIgnoreCase(name);
-        return coaches.stream().map(coach -> new CoachDTO(coach.getFirstName(),
+        return coaches.stream().map(coach -> new CoachDTO(coach.getCoachId(), coach.getFirstName(),
                 coach.getLastName(), coach.getDOB(), coach.getEmail(), coach.getGender()
         )).toList();
     }
 
     @Override
-    public String setAchievements(Achievements achievements, int id) {
-        coachRepository.findById(id).orElseThrow(
+    public String setAchievements(Achievements achievements, String id) {
+        coachRepository.findByCoachId(id).orElseThrow(
                 () -> new CoachNotFoundException("Coach Not Found")
         );
     /*
         TODO => instead of id use user_id after implementing the authentication service
          */
-        Coach coach = coachRepository.findById(id).get();
-        //coach.getAchievements().add(achievementRepository.save(achievements));
+        Coach coach = coachRepository.findByCoachId(id).get();
+        achievements.setAchievementId("ACH" + String.format("%05d", AchGenerateSequenceNumber()));
+        coach.getAchievements().add(achievementRepository.save(achievements));
         coachRepository.save(coach);
         return "Achievement successfully added";
     }
+    private int AchGenerateSequenceNumber() {
+        // You need to implement actual logic here (query DB for max ID or use a sequence generator)
+        // Here, we'll just return a random number for illustration purposes
+        return (int) (Math.random() * 100000); // Replace with real sequence logic
+    }
 
     @Override
-    public List<AssistanceRequestDTO> getAssistanceRequests(int coach_id) {
-        Coach coach = coachRepository.findById(coach_id).orElseThrow(
+    public List<AssistanceRequestDTO> getAssistanceRequests(String coach_id) {
+        Coach coach = coachRepository.findByCoachId(coach_id).orElseThrow(
                 ()->  new CoachNotFoundException("coach Not found")
         );
         List<AssistanceRequest> requests = assistanceRequestRepository.findAllByCoachAndStatus(coach, RequestStatus.PENDING);
-        return requests.stream().map(req -> new AssistanceRequestDTO(req.getCoach().getCoachId(),
+        return requests.stream().map(req -> new AssistanceRequestDTO(req.getReqid(),req.getCoach().getCoachId(),
                                                             req.getRemark(),
                                                             req.getMerits(),
                                                             req.getGoal(),
@@ -112,17 +145,17 @@ public class CoachServiceImpl implements CoachService{
     }
 
     @Override
-    public String approveRequest(long req_id) {
-        AssistanceRequest request = assistanceRequestRepository.findById(req_id).orElseThrow(
+    public String approveRequest(String req_id) {
+        AssistanceRequest request = assistanceRequestRepository.findByReqid(req_id).orElseThrow(
                 ()-> new RequestNotFoundException("Request Not found")
         );
         request.setStatus(RequestStatus.APPROVED);
         assistanceRequestRepository.save(request);
         Coach coach = request.getCoach();
         Athlete athlete = request.getAthlete();
-
        // coach.getAthletes().add(athlete);
         athlete.setCoach(coach);
+        //athlete.getCoach().setCoachId(coach.getCoachId());
 
         athleteRepository.save(athlete);
         coachRepository.save(coach);
@@ -130,8 +163,8 @@ public class CoachServiceImpl implements CoachService{
     }
 
     @Override
-    public String declineRequest(long req_id) {
-        AssistanceRequest request = assistanceRequestRepository.findById(req_id).orElseThrow(
+    public String declineRequest(String req_id) {
+        AssistanceRequest request = assistanceRequestRepository.findByReqid(req_id).orElseThrow(
                 ()-> new RequestNotFoundException("Request Not found")
         );
         request.setStatus(RequestStatus.REJECTED);

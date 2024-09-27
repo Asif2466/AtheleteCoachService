@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/v1/coaches")
+@RequestMapping("api/v1/athlete/coaches")
 public class CoachController {
 
     private CoachService coachService;
@@ -33,28 +33,33 @@ public class CoachController {
         return ResponseEntity.ok(coachService.findAllCoaches());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CoachDTO> findCoach(@PathVariable String id){
+        return ResponseEntity.ok(coachService.findCoach(id));
+    }
+
     @GetMapping("/search")
-    public ResponseEntity<List<CoachDTO>> getCoachByName(@RequestParam String name){
+    public ResponseEntity<List<CoachDTO>> getCoachByName(@RequestParam("name") String name){
         return ResponseEntity.ok(coachService.searchByName(name));
     }
 
-    @GetMapping("/achievements/{coach_id}")
-    public ResponseEntity<String> setAchievement(@RequestBody Achievements achievements, @PathVariable int coach_id){
+    @PostMapping("/achievements/{coach_id}")
+    public ResponseEntity<String> setAchievement(@RequestBody Achievements achievements, @PathVariable String coach_id){
         return ResponseEntity.ok(coachService.setAchievements(achievements,coach_id));
     }
 
     @GetMapping("/requests/{coach_id}")
-    public ResponseEntity<List<AssistanceRequestDTO>> getAssistanceRequest(@PathVariable int coach_id){
+    public ResponseEntity<List<AssistanceRequestDTO>> getAssistanceRequest(@PathVariable String coach_id){
         return ResponseEntity.ok(coachService.getAssistanceRequests(coach_id));
     }
 
     @PostMapping("/request/approve/{req_id}")
-    public ResponseEntity<String> approveRequest(@PathVariable Long req_id){
+    public ResponseEntity<String> approveRequest(@PathVariable String req_id){
         return ResponseEntity.ok(coachService.approveRequest(req_id));
     }
 
     @PostMapping("/request/decline/req_id")
-    public ResponseEntity<String> declineRequest(@PathVariable Long req_id){
+    public ResponseEntity<String> declineRequest(@PathVariable String req_id){
         return ResponseEntity.ok(coachService.declineRequest(req_id));
     }
 }

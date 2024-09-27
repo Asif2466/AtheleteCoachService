@@ -9,4 +9,6 @@ public interface AthleteRepository extends JpaRepository<Athlete, Integer> {
 
     Optional<Athlete> findByEmail(String email);
 
+    Optional<Athlete> findByAthleteId(String id);
+
 }
