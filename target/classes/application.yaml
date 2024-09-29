@@ -3,10 +3,10 @@ spring:
     name: AthleteCoachService
 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL driver class
+#    driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL driver class
     url: jdbc:mysql://localhost:3306/athlete_db  # MySQL connection URL
     username: root                      # MySQL username
-    password: pass@word1                     # MySQL password
+    password: manager                     # MySQL password
   jpa:
     hibernate:
       ddl-auto: update                          # Change to 'update' or 'create' as needed
@@ -14,7 +14,7 @@ spring:
     properties:
       hibernate:
         format_sql: true                        # Format SQL queries in the logs
-#    database-platform: org.hibernate.dialect.MySQL8Dialect  # MySQL dialect
+        dialect: org.hibernate.dialect.MySQLDialect  # MySQL dialect
   h2:
     console:
       enabled: false                            # H2 console is not needed for MySQL
@@ -35,6 +35,7 @@ eureka:
     register-with-eureka: true
   instance:
     prefer-ip-address: false
+#    hostname: localhost
 
 
 #spring:
